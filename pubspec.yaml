@@ -1,6 +1,6 @@
 name: gguf
 description: GGUF file parser (to support getting information from LLM models to be run with llama.cpp)
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/agilord/gguf
 
 #executables:

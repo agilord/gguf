@@ -7,6 +7,7 @@ import 'gguf_model.dart';
 Future<Gguf> parseGgufFile(String path) async {
   final file = File(path);
   final raf = await file.open(mode: FileMode.read);
+  final fileLength = await raf.length();
   try {
     // read the header
     final magicBytes = await raf.read(4);
@@ -73,7 +74,7 @@ Future<Gguf> parseGgufFile(String path) async {
     }
 
     // read tensors
-    final tensors = <Tensor>[];
+    final tensorsWithoutLength = <Tensor>[];
     for (int i = 0; i < tensorCount; i++) {
       final name = await _readString(raf);
       final numDims = await _readUint32(raf);
@@ -84,12 +85,31 @@ Future<Gguf> parseGgufFile(String path) async {
       final typeCode = await _readUint32(raf);
       final offset = await _readUint64(raf);
 
-      tensors.add(
+      tensorsWithoutLength.add(
         Tensor(
           name: name,
           dimensions: dimensions,
           typeCode: typeCode,
           offset: offset,
+          length: 0,
+        ),
+      );
+    }
+    final tensors = <Tensor>[];
+    for (var i = 0; i < tensorsWithoutLength.length; i++) {
+      final nextOffset = i == tensorsWithoutLength.length - 1
+          ? fileLength
+          : tensorsWithoutLength[i + 1].offset;
+      final t = tensorsWithoutLength[i];
+      final length = nextOffset - t.offset;
+      assert(length >= 0);
+      tensors.add(
+        Tensor(
+          name: t.name,
+          dimensions: t.dimensions,
+          typeCode: t.typeCode,
+          offset: t.offset,
+          length: length,
         ),
       );
     }

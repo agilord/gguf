@@ -55,6 +55,15 @@ void main() {
         },
         'tensors': hasLength(197),
       });
+      expect(gguf.baseLayerCount, 1);
+      expect(gguf.layerBlocksCount, 12);
+      expect(
+        gguf.tensors.fold(<int, int>{}, (sum, v) {
+          sum[v.typeCode] = (sum[v.typeCode] ?? 0) + v.length;
+          return sum;
+        }),
+        {0: 1032192, 8: 12452992, 20: 7962624, 11: 3802272},
+      );
     });
   });
 }

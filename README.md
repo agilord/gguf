@@ -1,7 +1,7 @@
 # GGUF Parser
 
 A Dart library for parsing GGUF (GPT-Generated Unified Format) model files
-(e.g. files that are run with llama.cpp).
+(e.g. files that are run with `llama.cpp`).
 
 ## Usage
 

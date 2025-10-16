@@ -27,6 +27,7 @@ Tensor _$TensorFromJson(Map<String, dynamic> json) => Tensor(
       .toList(),
   typeCode: (json['typeCode'] as num).toInt(),
   offset: (json['offset'] as num).toInt(),
+  length: (json['length'] as num).toInt(),
 );
 
 Map<String, dynamic> _$TensorToJson(Tensor instance) => <String, dynamic>{
@@ -34,4 +35,5 @@ Map<String, dynamic> _$TensorToJson(Tensor instance) => <String, dynamic>{
   'dimensions': instance.dimensions,
   'typeCode': instance.typeCode,
   'offset': instance.offset,
+  'length': instance.length,
 };
